@@ -218,7 +218,7 @@ export default function Header() {
               href={`/explore?category=${cat.slug}`}
               className="shrink-0 px-4 py-1.5 rounded-full text-xs font-medium text-gray-500 hover:text-purple-600 hover:bg-purple-50 transition-all whitespace-nowrap"
             >
-              {cat.icon} {cat.name}
+              {cat.icon_emoji} {cat.name}
             </Link>
           ))}
         </div>
