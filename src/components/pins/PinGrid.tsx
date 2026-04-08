@@ -25,9 +25,10 @@ export default function PinGrid({
   currentUserId,
 }: PinGridProps) {
   const [pins, setPins] = useState<Pin[]>(initialPins || []);
-  const [loading, setLoading] = useState(!initialPins);
+  const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
+  const [didInitialLoad, setDidInitialLoad] = useState(!!initialPins);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
@@ -154,9 +155,23 @@ export default function PinGrid({
     setLoading(false);
   }, [loading, hasMore, page, fetchPins]);
 
-  // Initial load
+  // Initial load - directly fetch without going through loadMore
   useEffect(() => {
-    if (!initialPins) loadMore();
+    if (!initialPins && !didInitialLoad) {
+      setDidInitialLoad(true);
+      (async () => {
+        setLoading(true);
+        try {
+          const newPins = await fetchPins(0);
+          if (newPins.length < PINS_PER_PAGE) setHasMore(false);
+          setPins(newPins);
+          setPage(1);
+        } catch (err) {
+          console.error("Error on initial load:", err);
+        }
+        setLoading(false);
+      })();
+    }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Infinite scroll
@@ -174,7 +189,7 @@ export default function PinGrid({
     return () => observerRef.current?.disconnect();
   }, [loadMore, hasMore, loading]);
 
-  if (!loading && pins.length === 0) {
+  if (!loading && pins.length === 0 && didInitialLoad) {
     return (
       <div className="text-center py-20">
         <div className="text-6xl mb-4">📌</div>
