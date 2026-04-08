@@ -35,7 +35,7 @@ function ExploreContent() {
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">Explorar</h1>
             <p className="text-gray-500 text-sm">
-              Descubra imagens incriveis em todas as categorias
+              Descubra imagens incríveis em todas as categorias
             </p>
           </div>
         )}
