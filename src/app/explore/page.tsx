@@ -19,7 +19,7 @@ function ExploreContent() {
         {activeCat ? (
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl">{activeCat.icon}</span>
+              <span className="text-3xl">{activeCat.icon_emoji}</span>
               <h1 className="text-2xl font-bold text-gray-800">
                 {activeCat.name}
               </h1>
@@ -62,7 +62,7 @@ function ExploreContent() {
                   : "bg-purple-50 text-purple-600 hover:bg-purple-100"
               }`}
             >
-              {cat.icon} {cat.name}
+              {cat.icon_emoji} {cat.name}
             </Link>
           ))}
         </div>
