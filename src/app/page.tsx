@@ -1,62 +1,60 @@
 "use client";
-import { useAuth } from "@/hooks/useAuth";
+import Header from "@/components/common/Header";
 import PinGrid from "@/components/pins/PinGrid";
 import Link from "next/link";
-import { DEFAULT_CATEGORIES } from "@/lib/constants";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function HomePage() {
-  const { authUser, loading } = useAuth();
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
 
   return (
-    <div className="max-w-[1800px] mx-auto px-4 py-6">
-      {/* Categories bar */}
-      <div className="flex gap-2 overflow-x-auto pb-4 mb-6">
-        <Link
-          href="/"
-          className="shrink-0 px-4 py-2 bg-black text-white rounded-full text-sm font-semibold"
-        >
-          Tudo
-        </Link>
-        {DEFAULT_CATEGORIES.slice(0, 12).map((cat) => (
-          <Link
-            key={cat.slug}
-            href={`/explore?category=${cat.slug}`}
-            className="shrink-0 px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm font-semibold hover:bg-gray-200 transition"
-          >
-            {cat.icon_emoji} {cat.name}
-          </Link>
-        ))}
-      </div>
-
-      {/* Hero for non-logged users */}
-      {!loading && !authUser && (
-        <div className="text-center py-16 mb-8 bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Descubra imagens incríveis
-          </h1>
-          <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-            Explore, salve e compartilhe as melhores imagens da internet.
-            Crie suas coleções e inspire-se.
-          </p>
-          <div className="flex gap-3 justify-center">
-            <Link
-              href="/register"
-              className="px-8 py-3 bg-[#e60023] text-white rounded-full font-semibold text-lg hover:bg-[#cc001f] transition"
-            >
-              Comece agora
-            </Link>
-            <Link
-              href="/explore"
-              className="px-8 py-3 bg-white text-gray-800 rounded-full font-semibold text-lg hover:bg-gray-100 transition shadow-sm"
-            >
-              Explorar
-            </Link>
+    <div className="min-h-screen">
+      <Header />
+      <main>
+        {/* Hero */}
+        <section className="relative overflow-hidden py-16 px-4">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600/90 via-pink-500/90 to-amber-400/90" />
+          <div className="absolute inset-0 backdrop-blur-sm" />
+          <div className="relative max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+              Descubra imagens incriveis
+            </h1>
+            <p className="text-lg text-white/90 mb-8 max-w-xl mx-auto">
+              Explore, crie com IA e compartilhe as melhores imagens.
+              Sua criatividade sem limites.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Link
+                href="/generate"
+                className="px-8 py-3 rounded-full bg-white text-purple-600 font-semibold hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl"
+              >
+                Criar com IA
+              </Link>
+              <Link
+                href="/explore"
+                className="px-8 py-3 rounded-full border-2 border-white/80 text-white font-semibold hover:bg-white/10 transition-all"
+              >
+                Explorar
+              </Link>
+            </div>
           </div>
-        </div>
-      )}
+        </section>
 
-      {/* Pin grid */}
-      <PinGrid currentUserId={authUser?.id} />
+        {/* Pin Grid */}
+        <section className="max-w-7xl mx-auto py-8">
+          <PinGrid categorySlug={category || undefined} />
+        </section>
+      </main>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }

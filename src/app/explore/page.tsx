@@ -1,58 +1,81 @@
 "use client";
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { useAuth } from "@/hooks/useAuth";
+import Header from "@/components/common/Header";
 import PinGrid from "@/components/pins/PinGrid";
-import { DEFAULT_CATEGORIES } from "@/lib/constants";
+import { CATEGORIES } from "@/lib/constants";
+import Link from "next/link";
 
 function ExploreContent() {
-  const { authUser } = useAuth();
   const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category") || "";
+  const category = searchParams.get("category");
+  const activeCat = CATEGORIES.find((c) => c.slug === category);
 
   return (
-    <div className="max-w-[1800px] mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">Explorar</h1>
+    <div className="min-h-screen">
+      <Header />
+      <main className="max-w-7xl mx-auto py-6 px-4">
+        {/* Category header */}
+        {activeCat ? (
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-3xl">{activeCat.icon}</span>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {activeCat.name}
+              </h1>
+            </div>
+            <Link
+              href="/explore"
+              className="text-sm text-purple-500 hover:text-purple-700 transition-colors"
+            >
+              Ver todas as categorias
+            </Link>
+          </div>
+        ) : (
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Explorar</h1>
+            <p className="text-gray-500 text-sm">
+              Descubra imagens incriveis em todas as categorias
+            </p>
+          </div>
+        )}
 
-      <div className="flex flex-wrap gap-2 mb-8">
-        <Link
-          href="/explore"
-          className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
-            !activeCategory
-              ? "bg-black text-white"
-              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-          }`}
-        >
-          Todas
-        </Link>
-        {DEFAULT_CATEGORIES.map((cat) => (
+        {/* Category pills */}
+        <div className="flex flex-wrap gap-2 mb-8">
           <Link
-            key={cat.slug}
-            href={`/explore?category=${cat.slug}`}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
-              activeCategory === cat.slug
-                ? "bg-black text-white"
-                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+            href="/explore"
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+              !category
+                ? "btn-gradient text-white"
+                : "bg-purple-50 text-purple-600 hover:bg-purple-100"
             }`}
           >
-            {cat.icon_emoji} {cat.name}
+            Tudo
           </Link>
-        ))}
-      </div>
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/explore?category=${cat.slug}`}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                category === cat.slug
+                  ? "btn-gradient text-white"
+                  : "bg-purple-50 text-purple-600 hover:bg-purple-100"
+              }`}
+            >
+              {cat.icon} {cat.name}
+            </Link>
+          ))}
+        </div>
 
-      <PinGrid
-        key={activeCategory}
-        categorySlug={activeCategory || undefined}
-        currentUserId={authUser?.id}
-      />
+        <PinGrid categorySlug={category || undefined} />
+      </main>
     </div>
   );
 }
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={<div className="flex justify-center py-20"><div className="w-8 h-8 border-3 border-gray-200 border-t-[#e60023] rounded-full animate-spin" /></div>}>
+    <Suspense>
       <ExploreContent />
     </Suspense>
   );

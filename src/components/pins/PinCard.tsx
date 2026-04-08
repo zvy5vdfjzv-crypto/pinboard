@@ -85,7 +85,7 @@ export default function PinCard({
                   onClick={handleLike}
                   className={`p-2 rounded-full transition ${
                     liked
-                      ? "bg-[#e60023] text-white"
+                      ? "bg-[#7C3AED] text-white"
                       : "bg-white/90 text-gray-700 hover:bg-white"
                   }`}
                 >

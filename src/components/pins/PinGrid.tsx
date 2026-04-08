@@ -113,7 +113,6 @@ export default function PinGrid({
         return [];
       }
 
-      // Transform the data
       const transformed: Pin[] =
         (data?.map((pin: Record<string, unknown>) => ({
           ...pin,
@@ -123,7 +122,6 @@ export default function PinGrid({
             : 0,
         })) as Pin[]) || [];
 
-      // Check if user liked each pin
       if (currentUserId && transformed.length > 0) {
         const { data: likes } = await supabase
           .from("likes")
@@ -155,7 +153,6 @@ export default function PinGrid({
     setLoading(false);
   }, [loading, hasMore, page, fetchPins]);
 
-  // Initial load - directly fetch without going through loadMore
   useEffect(() => {
     if (!initialPins && !didInitialLoad) {
       setDidInitialLoad(true);
@@ -172,9 +169,28 @@ export default function PinGrid({
         setLoading(false);
       })();
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Infinite scroll
+  useEffect(() => {
+    if (didInitialLoad) {
+      setPins([]);
+      setPage(0);
+      setHasMore(true);
+      (async () => {
+        setLoading(true);
+        try {
+          const newPins = await fetchPins(0);
+          if (newPins.length < PINS_PER_PAGE) setHasMore(false);
+          setPins(newPins);
+          setPage(1);
+        } catch (err) {
+          console.error("Error reloading:", err);
+        }
+        setLoading(false);
+      })();
+    }
+  }, [categorySlug, searchQuery]);
+
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
     observerRef.current = new IntersectionObserver(
@@ -220,13 +236,13 @@ export default function PinGrid({
       <div ref={loadMoreRef} className="py-8 flex justify-center">
         {loading && (
           <div className="flex gap-1">
-            <div className="w-3 h-3 bg-[#e60023] rounded-full animate-bounce" />
+            <div className="w-3 h-3 bg-[#7C3AED] rounded-full animate-bounce" />
             <div
-              className="w-3 h-3 bg-[#e60023] rounded-full animate-bounce"
+              className="w-3 h-3 bg-[#7C3AED] rounded-full animate-bounce"
               style={{ animationDelay: "0.1s" }}
             />
             <div
-              className="w-3 h-3 bg-[#e60023] rounded-full animate-bounce"
+              className="w-3 h-3 bg-[#7C3AED] rounded-full animate-bounce"
               style={{ animationDelay: "0.2s" }}
             />
           </div>

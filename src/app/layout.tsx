@@ -1,24 +1,22 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/common/Header";
-import { APP_NAME, APP_DESCRIPTION } from "@/lib/constants";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: APP_NAME,
-  description: APP_DESCRIPTION,
+  title: "Photogram",
+  description: "Descubra, crie e compartilhe imagens incríveis com IA",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="pt-BR" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-white">
-        <Header />
-        <main className="flex-1">{children}</main>
-      </body>
+    <html lang="pt-BR">
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
