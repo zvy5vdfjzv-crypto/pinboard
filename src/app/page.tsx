@@ -23,7 +23,7 @@ export default function HomePage() {
             href={`/explore?category=${cat.slug}`}
             className="shrink-0 px-4 py-2 bg-gray-100 text-gray-800 rounded-full text-sm font-semibold hover:bg-gray-200 transition"
           >
-            {cat.icon_emojiý {cat.name}
+            {cat.icon_emoji} {cat.name}
           </Link>
         ))}
       </div>
