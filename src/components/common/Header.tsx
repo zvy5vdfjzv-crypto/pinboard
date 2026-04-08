@@ -111,7 +111,7 @@ export default function Header() {
             href="/"
             className="hidden md:flex px-3 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-purple-600 hover:bg-purple-50 transition-all"
           >
-            Ínicio
+            Início
           </Link>
           <Link
             href="/explore"
