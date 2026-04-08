@@ -33,32 +33,22 @@ export default function RegisterPage() {
       return;
     }
 
-    // Sign up
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // Sign up with metadata (trigger auto-creates profile)
+    const { error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username: username.toLowerCase(),
+          full_name: fullName || null,
+        },
+      },
     });
 
     if (authError) {
       setError(authError.message);
       setLoading(false);
       return;
-    }
-
-    // Create user profile
-    if (authData.user) {
-      const { error: profileError } = await supabase.from("users").insert({
-        id: authData.user.id,
-        email,
-        username: username.toLowerCase(),
-        full_name: fullName || null,
-      });
-
-      if (profileError) {
-        setError("Erro ao criar perfil. Tente novamente.");
-        setLoading(false);
-        return;
-      }
     }
 
     router.push("/");
