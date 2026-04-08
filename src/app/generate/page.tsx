@@ -40,7 +40,7 @@ export default function GeneratePage() {
       } else {
         setError("Nenhuma imagem foi gerada. Tente um prompt diferente.");
       }
-    } catch {
+    } catch (_e) {
       setError("Erro de conexao. Tente novamente.");
     } finally {
       setLoading(false);
@@ -75,7 +75,7 @@ export default function GeneratePage() {
       } else {
         setSaved(true);
       }
-    } catch {
+    } catch (_e) {
       setError("Erro ao salvar. Tente novamente.");
     } finally {
       setSaving(false);
