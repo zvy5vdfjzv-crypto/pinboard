@@ -50,7 +50,7 @@ export default function RegisterPage() {
 
       router.push("/");
       router.refresh();
-    } catch {
+    } catch (_e) {
       setError("Erro ao criar conta. Tente novamente.");
     } finally {
       setLoading(false);
